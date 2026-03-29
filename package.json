@@ -1,0 +1,43 @@
+{
+  "name": "azure-dev-server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Remote Desktop Commander — MCP server with filesystem + shell access over Streamable HTTP",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "node --watch dist/server.js",
+    "test": "node --test tests/*.test.mjs",
+    "lint": "npx eslint src/*.ts",
+    "format": "npx prettier --write src/ tests/",
+    "format:check": "npx prettier --check src/ tests/",
+    "type-check": "tsc --noEmit",
+    "check": "pnpm run format:check && pnpm run lint && pnpm run type-check && pnpm run build && pnpm run test",
+    "prepare": "npx simple-git-hooks"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm run check"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["simple-git-hooks"]
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "express": "^5.1.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.0.0",
+    "eslint": "^10.1.0",
+    "prettier": "^3.8.0",
+    "simple-git-hooks": "^2.13.1",
+    "typescript": "^5.8.0",
+    "typescript-eslint": "^8.57.0"
+  }
+}

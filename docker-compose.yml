@@ -1,0 +1,17 @@
+services:
+  azure-dev:
+    build: .
+    ports:
+      - "3001:3001"
+    environment:
+      MCP_API_KEY: ${MCP_API_KEY}
+      WORKSPACE: /workspace
+    volumes:
+      - ~/Library/CloudStorage/OneDrive-Curtin/Developer:/workspace:rw
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3001/health').then(r=>process.exit(r.ok?0:1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
