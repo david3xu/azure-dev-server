@@ -15,7 +15,7 @@ pnpm run lint           # ESLint strict checks
 pnpm run format:check   # Prettier formatting check
 pnpm run format         # Auto-format all files
 pnpm run type-check     # TypeScript type checking
-pnpm run test           # Node.js built-in test runner
+pnpm run test           # Node.js built-in test runner (25 tests, 8 suites)
 pnpm run check          # All of the above in sequence
 pnpm run start          # Run compiled server (dist/server.js)
 ```
@@ -85,10 +85,25 @@ az containerapp update --name ca-dev-server --resource-group rg-datacore \
 6. **MCP session requires two requests.** POST `/mcp` to initialize (no
    session header) → capture `mcp-session-id` response header → pass it
    on every subsequent request. Without it you get "Server not initialized".
-7. **WORKSPACE on Azure is empty.** `/workspace` in the container has no
-   files yet. Azure Files share mount is the next step (Phase 4 extension).
+7. **WORKSPACE is the Azure Files mount.** `/workspace` in the container
+   is mounted to the `workspace` file share in `stdevserverau` (storage
+   account). Files written here persist across restarts and revisions.
 8. **`az acr build` skips local Docker.** Build and push happen entirely
    in ACR cloud agents — no Docker Desktop required on the dev machine.
+9. **`clear` is not available in the slim image.** Use `Ctrl+L` in the
+   terminal. `ncurses-bin` is in the Dockerfile — available after next deploy.
+10. **Two revisions can be active at once.** The bootstrap used a placeholder
+    image (`mcr.microsoft.com/k8se/quickstart:latest`) for revision `0000002`.
+    Deactivate it: `az containerapp revision deactivate --name ca-dev-server
+    --resource-group rg-datacore --revision ca-dev-server--0000002`. Otherwise
+    `az containerapp exec` may connect to the wrong container.
+11. **`az containerapp exec` rate-limits at 200 req/5min.** After repeated
+    exec attempts (e.g. restarting replicas), Azure returns 429 with
+    `retry-after: 600`. Wait 10 minutes. Use `run_command` via MCP in the
+    meantime — it goes through HTTP and has no exec rate limit.
+12. **Specify `--revision` when using exec.** Without it, exec may fail
+    with "Could not find a replica" if multiple revisions exist. Always pass
+    `--revision ca-dev-server--0000001` explicitly.
 
 ## Code style
 
