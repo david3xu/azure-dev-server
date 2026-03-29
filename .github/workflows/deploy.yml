@@ -1,0 +1,58 @@
+name: Deploy to Azure Container Apps
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  check:
+    name: Quality checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm audit --audit-level=high
+      - run: pnpm run check
+
+  deploy:
+    name: Build image + deploy
+    runs-on: ubuntu-latest
+    needs: check
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: '{"clientId":"${{ secrets.AZURE_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.AZURE_TENANT_ID }}"}'
+
+      - name: Build and push image via ACR
+        run: |
+          az acr build \
+            --registry acrdevserver \
+            --image azure-dev-server:${{ github.sha }} \
+            --image azure-dev-server:latest \
+            --file Dockerfile .
+
+      - name: Deploy new revision
+        run: |
+          az containerapp update \
+            --name ca-dev-server \
+            --resource-group rg-datacore \
+            --image acrdevserver.azurecr.io/azure-dev-server:${{ github.sha }}
+
+      - name: Verify health endpoint
+        run: |
+          sleep 15
+          STATUS=$(curl -sf https://ca-dev-server.blackrock-ecaa139a.australiaeast.azurecontainerapps.io/health | python3 -c "import sys,json; print(json.load(sys.stdin)['status'])")
+          echo "Health: $STATUS"
+          [ "$STATUS" = "ok" ] || exit 1

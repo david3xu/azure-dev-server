@@ -8,8 +8,13 @@ COPY tsconfig.json ./
 COPY src/ src/
 RUN pnpm run build
 
-# Runtime stage: production image
+# Runtime stage: production image with workspace tools
 FROM node:22-slim AS runner
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      git \
+      curl \
+      ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
 RUN corepack enable && pnpm install --frozen-lockfile --prod
