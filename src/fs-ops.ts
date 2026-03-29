@@ -1,4 +1,4 @@
-// How do the file operation utilities work?
+// How are filesystem read and search operations implemented?
 
 import { readFile, readdir, stat } from "node:fs/promises";
 import path from "node:path";

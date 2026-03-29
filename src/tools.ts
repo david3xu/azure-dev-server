@@ -13,7 +13,7 @@ import {
   findSingleOccurrence,
   buildEditPreview,
   searchFiles,
-} from "./tools-helpers.js";
+} from "./fs-ops.js";
 
 const execAsync = promisify(exec);
 

@@ -24,11 +24,16 @@ pnpm run start          # Run compiled server (dist/server.js)
 
 ```
 src/
-  server.ts         → How does the HTTP server start and route requests?
-  tools.ts          → What tools can Claude Desktop use remotely?
-  tools-helpers.ts  → How do the file operation utilities work?
-  auth.ts           → How are requests authenticated?
-  types.ts          → What shapes exist?
+  server.ts   → How does the HTTP server start and route requests?
+  tools.ts    → What tools can Claude Desktop use remotely?
+  fs-ops.ts   → How are filesystem read and search operations implemented?
+  auth.ts     → How are requests authenticated?
+  types.ts    → What shapes exist?
+
+tests/
+  server.test.mjs   → Does the HTTP server start and respond correctly?
+  tools.test.mjs    → Do the phase-2 tools (edit_file, search_files) behave correctly?
+  fs-ops.test.mjs   → Do the filesystem read and search operations work correctly?
 
 Dockerfile        → Multi-stage build: builder (compile) → runner (prod deps + dist/)
 docker-compose.yml → Local testing with /workspace volume mount
