@@ -52,7 +52,7 @@ Tests import from `dist/`. Entry point: `dist/server.js`.
 | Resource Group | `rg-datacore` (australiaeast) |
 | Container Registry | `acrdevserver.azurecr.io` |
 | Container App | `ca-dev-server` |
-| FQDN | `ca-dev-server.blackrock-ecaa139a.australiaeast.azurecontainerapps.io` |
+| FQDN | `ca-dev-server.purplegrass-77b8c839.australiaeast.azurecontainerapps.io` |
 
 Re-deploy after code changes:
 ```bash
@@ -111,6 +111,16 @@ CI (GitHub Actions)     ✅  format → lint → type-check → build → test +
           Formatter     ✅  Prettier configured
             Schemas     ✅  Zod on all tool inputs
 ```
+
+## Documentation Rules
+
+- `azure-dev-server/CLAUDE.md` is the canonical record for this sandbox (commands, deployment targets, gotchas). Other docs point here when referencing this project.
+- Before closing work on this repo:
+  1. Run `./scripts/check-docs.sh`.
+  2. Grep for any values you changed across docs (ports, resource names, test counts). Update or replace duplicates with pointers.
+  3. Add `Docs checked: …` to your task log so reviewers know which commands ran.
+- When you add or change Azure resource IDs, update the design docs under `docs/azure-dev-server/` and note the date.
+- Claude Desktop reruns the same checks during review. Missing documentation proof is an automatic send-back.
 
 ## References
 
