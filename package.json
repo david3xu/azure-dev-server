@@ -17,7 +17,7 @@
     "format:check": "npx prettier --check src/ tests/",
     "type-check": "tsc --noEmit",
     "check": "pnpm run format:check && pnpm run lint && pnpm run type-check && pnpm run build && pnpm run test",
-    "prepare": "npx simple-git-hooks"
+    "prepare": "[ -d .git ] && npx simple-git-hooks || true"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm run check"
