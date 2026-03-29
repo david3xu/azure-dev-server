@@ -7,9 +7,23 @@ import { checkApiKey } from "./auth.js";
 import { registerTools } from "./tools.js";
 import type { ServerConfig } from "./types.js";
 
+function resolveApiKey(): string {
+  const key = process.env["MCP_API_KEY"];
+  if (!key) {
+    if (process.env["NODE_ENV"] === "production") {
+      throw new Error("MCP_API_KEY must be set in production — refusing to start with no auth.");
+    }
+    console.warn(
+      "[WARN] MCP_API_KEY not set — using insecure dev-only fallback. Do not run this in production.",
+    );
+    return "dev-key-change-me";
+  }
+  return key;
+}
+
 const config: ServerConfig = {
   port: parseInt(process.env["PORT"] ?? "3001", 10),
-  apiKey: process.env["MCP_API_KEY"] ?? "dev-key-change-me",
+  apiKey: resolveApiKey(),
   workspace: process.env["WORKSPACE"] ?? process.cwd(),
 };
 

@@ -14,8 +14,3 @@ export interface FileInfo {
   created: string;
   permissions: string;
 }
-
-export interface CommandResult {
-  stdout: string;
-  stderr: string;
-}

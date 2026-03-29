@@ -1,5 +1,8 @@
 # azure-dev-server — Agent Guidelines
 
+> Updated: March 29, 2026
+> Canonical source for all azure-dev-server metrics, commands, and gotchas.
+
 ## Project overview
 
 Remote MCP server that exposes filesystem and shell access over
@@ -72,7 +75,9 @@ az containerapp update --name ca-dev-server --resource-group rg-datacore \
 ## Gotchas
 
 1. **Auth is API key, not OAuth.** Claude Desktop doesn't support Entra
-   OAuth for custom MCP servers yet. Use `x-api-key` header.
+   OAuth for custom MCP servers yet. Use `x-api-key` header. Query param
+   `?key=` is also accepted (used by MCP SDK client transport) but header
+   auth is preferred in production.
 2. **Express 5, not 4.** We use Express 5 which has native async handler
    support. No need for express-async-errors.
 3. **Streamable HTTP, not SSE.** MCP spec deprecated SSE in March 2025.
@@ -135,6 +140,9 @@ CI (GitHub Actions)     ✅  format → lint → type-check → build → test +
   2. Grep for any values you changed across docs (ports, resource names, test counts). Update or replace duplicates with pointers.
   3. Add `Docs checked: …` to your task log so reviewers know which commands ran.
 - When you add or change Azure resource IDs, update the design docs under `docs/azure-dev-server/` and note the date.
+- If you changed a metric (test count, tool count, file count):
+  - Update ONLY this CLAUDE.md — it is the canonical source.
+  - Do NOT update other docs — they should link here, not duplicate.
 - Claude Desktop reruns the same checks during review. Missing documentation proof is an automatic send-back.
 
 ## References
@@ -143,14 +151,3 @@ CI (GitHub Actions)     ✅  format → lint → type-check → build → test +
 - `../docs/azure-dev-server/IMPLEMENTATION-PLAN.md` — phased migration roadmap (design doc, lives in developer/docs/)
 - `../docs/CODE-DISCIPLINE.md` — constraint stack and structural rules
 - `../docs/workflow.md` — PROBLEM → RESEARCH → DIGEST → DESIGN → PLAN → BUILD → REVIEW
-
-## Documentation rules
-
-After completing any task:
-1. Run `pnpm run check`
-2. Search for any value you changed across `~/Developer/docs/` and `*/CLAUDE.md`
-3. Include "Docs checked: [clean | updated X, Y, Z]" in task_completed event
-
-If you changed a metric (test count, tool count, file count):
-- Update ONLY this CLAUDE.md — it is the canonical source
-- Do NOT update other docs — they should link here, not duplicate
