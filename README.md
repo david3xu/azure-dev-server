@@ -1,3 +1,8 @@
+> ⚠️ **DEPRECATED** — This repository has been consolidated into the
+> [`datacore`](https://github.com/david3xu/datacore) monorepo at
+> `packages/dev-server`. This repo is archived and no longer maintained.
+> All future development happens in the monorepo.
+
 # azure-dev-server
 
 Remote MCP server that gives Claude Desktop full filesystem and shell access over HTTPS — a cloud-hosted [Desktop Commander](https://github.com/wonderwhy-er/DesktopCommanderMCP) running on Azure Container Apps.
