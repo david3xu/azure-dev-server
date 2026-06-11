@@ -112,13 +112,8 @@ az containerapp update --name ca-dev-server --resource-group rg-datacore \
 
 ## Code style
 
-- Strict mode (`strict: true` in tsconfig, all strict options)
-- `noUncheckedIndexedAccess`, `noUnusedLocals`, `noUnusedParameters`
-- ES modules only (`import`/`export`, not `require`)
-- `unknown` over `any` — narrow with type guards
-- `eqeqeq` enforced — always `===`
-- `prefer-const` — never use `let` if the value doesn't change
-- Zod for schema validation on MCP tool inputs
+See `docs/discipline/CODE-DISCIPLINE.md` — TypeScript/Node.js standards apply here unchanged.
+Additional: Zod for all MCP tool input validation.
 
 ## Constraint stack
 
@@ -149,5 +144,5 @@ CI (GitHub Actions)     ✅  format → lint → type-check → build → test +
 
 - `CLAUDE.md` — this project's agent guidelines and gotchas (canonical file)
 - `../docs/azure-dev-server/IMPLEMENTATION-PLAN.md` — phased migration roadmap (design doc, lives in developer/docs/)
-- `../docs/CODE-DISCIPLINE.md` — constraint stack and structural rules
+- `../docs/discipline/CODE-DISCIPLINE.md` — constraint stack and structural rules
 - `../docs/workflow.md` — PROBLEM → RESEARCH → DIGEST → DESIGN → PLAN → BUILD → REVIEW
